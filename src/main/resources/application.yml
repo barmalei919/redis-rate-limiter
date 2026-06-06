@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: redis-rate-limiter
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+ratelimit:
+  fail-open: true
+  default-rule:
+    name: default
+    pattern: /**
+    algorithm: SLIDING_WINDOW
+    identity: COMPOSITE
+    limit: 60
+    window-ms: 60000
+  rules:
+    auth:
+      name: auth
+      pattern: /api/auth/**
+      algorithm: SLIDING_WINDOW
+      identity: IP
+      limit: 5
+      window-ms: 60000
+    cheap:
+      name: cheap
+      pattern: /api/cheap/**
+      algorithm: TOKEN_BUCKET
+      identity: COMPOSITE
+      limit: 100
+      window-ms: 60000
+      burst-capacity: 150
+    expensive:
+      name: expensive
+      pattern: /api/expensive/**
+      algorithm: TOKEN_BUCKET
+      identity: USER
+      limit: 5
+      window-ms: 60000
+      burst-capacity: 5
