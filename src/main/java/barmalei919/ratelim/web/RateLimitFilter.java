@@ -2,7 +2,7 @@ package barmalei919.ratelim.web;
 
 import barmalei919.ratelim.core.RateLimitService;
 import barmalei919.ratelim.domain.Decision;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
